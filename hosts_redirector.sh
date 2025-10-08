@@ -185,10 +185,42 @@ function create_block_list() {
   if [ ! -f "$LIST" ]; then
     log_info "Criando lista de bloqueio padrão em $LIST..."
     tee "$LIST" >/dev/null <<'EOF'
+# -----------------
+# REDES SOCIAIS E VÍDEOS
+# -----------------
+youtube.com
+www.youtube.com
+m.youtube.com
+facebook.com
+www.facebook.com
+instagram.com
+www.instagram.com
+twitter.com
+www.twitter.com
+x.com
+www.x.com
+tiktok.com
+www.tiktok.com
+reddit.com
+www.reddit.com
+linkedin.com
+www.linkedin.com
+pinterest.com
+www.pinterest.com
+br.pinterest.com
+twitch.tv
+www.twitch.tv
+kwai.com
+www.kwai.com
+
+# -----------------
+# NOTÍCIAS NACIONAIS
+# -----------------
 g1.globo.com
 www.g1.globo.com
 oglobo.globo.com
 www.oglobo.globo.com
+valor.globo.com
 uol.com.br
 www.uol.com.br
 noticias.uol.com.br
@@ -198,14 +230,30 @@ terra.com.br
 www.terra.com.br
 r7.com
 www.r7.com
+noticias.r7.com
 estadao.com.br
 www.estadao.com.br
 metropoles.com
 www.metropoles.com
 cnnbrasil.com.br
 www.cnnbrasil.com.br
+poder360.com.br
+www.poder360.com.br
+jovempan.com.br
+noticias.jovempan.com.br
+band.uol.com.br/noticias
+veja.abril.com.br
+exame.com
+cartacapital.com.br
+oantagonista.com
+brasil247.com
+
+# -----------------
+# ESPORTES
+# -----------------
 ge.globo.com
 www.ge.globo.com
+globoesporte.globo.com
 esporte.uol.com.br
 esportes.terra.com.br
 esportes.r7.com
@@ -213,6 +261,17 @@ espn.com.br
 www.espn.com.br
 lance.com.br
 www.lance.com.br
+placar.com.br
+gazetaesportiva.com
+bandsports.com.br
+esporte.band.uol.com.br
+
+# -----------------
+# AGREGADORES E OUTROS
+# -----------------
+br.noticias.yahoo.com
+news.google.com
+
 EOF
   fi
 }
