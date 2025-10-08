@@ -1,4 +1,4 @@
-# Hosts Redirector para Foco
+# Hosts Redirector para Foco feito em Java
 ![Versão](https://img.shields.io/badge/versão-2.1-blue)
 ![Licença](https://img.shields.io/badge/licença-MIT-green)
 ![Tecnologias](https://img.shields.io/badge/tecnologias-Bash%20%7C%20Java%20%7C%20Systemd-lightgrey)
