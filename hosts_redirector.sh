@@ -48,7 +48,6 @@ function create_directories() {
   chmod 750 "$SECRET"
   chmod 700 "$LOCALCA"
 }
-
 function create_web_page() {
   log_info "Criando ou atualizando a página de bloqueio em $WEB/index.html..."
   tee "$WEB/index.html" >/dev/null <<'HTML'
@@ -129,29 +128,12 @@ function create_web_page() {
       color: var(--cor-texto-secundario);
       opacity: 0.7;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes scaleUp {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.01); }
-        100% { transform: scale(1); }
-    }
-    .btn {
-        animation: pulse 2s infinite ease-in-out 1s;
-    }
-    body.exit-animation {
-        animation: fadeOutZoom 0.6s ease-in forwards;
-    }
-    @keyframes fadeOutZoom {
-        from { opacity: 1; transform: scale(1); }
-        to { opacity: 0; transform: scale(0.8); }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.01); } 100% { transform: scale(1); } }
+    .btn { animation: pulse 2s infinite ease-in-out 1s; }
+    body.exit-animation { animation: fadeOutZoom 0.6s ease-in forwards; }
+    @keyframes fadeOutZoom { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
   </style>
 </head>
 <body>
@@ -159,21 +141,35 @@ function create_web_page() {
     <h1><span style="color: #fce205;">Pare.</span> <span style="color: var(--cor-destaque);">Foque.</span> <span style="color: #1a71ff;">Estude.</span></h1>
     <p>Você acessou um site que pode desviar seu foco. Este é um lembrete para <br> retornar ao seu objetivo principal e **conquistar seus estudos**.</p>
     <a class="btn" href="https://questoes.grancursosonline.com.br/" target="_blank" rel="noopener">
-      &#x1F4DA; Ir para as Questões Agora &#x27A1;
+      &#x1F4DA; Abrir Ferramentas de Estudo &#x27A1;
     </a>
     <div class="small">
       Lembre-se da Técnica Pomodoro: 25 min foco intenso + 5 min pausa. <br>
       Sua jornada de aprendizado te espera!
     </div>
   </div>
+
   <script>
     document.querySelector('.btn').addEventListener('click', function(event) {
-        event.preventDefault();
-        const button = this;
+        event.preventDefault(); // Impede a navegação padrão do link
+        
+        // Lista de URLs que você quer abrir
+        const urlsParaAbrir = [
+            'https://questoes.grancursosonline.com.br/',
+            'https://blog.grancursosonline.com.br/',
+            'https://www.qconcursos.com/'
+        ];
+
+        // Adiciona a classe para a animação de saída
         document.body.classList.add('exit-animation');
+
+        // Aguarda a animação terminar antes de abrir as abas
         setTimeout(function() {
-            window.open(button.href, button.target);
-        }, 500);
+            // Abre cada URL da lista em uma nova aba
+            urlsParaAbrir.forEach(url => {
+                window.open(url, '_blank');
+            });
+        }, 500); 
     });
   </script>
 </body>
