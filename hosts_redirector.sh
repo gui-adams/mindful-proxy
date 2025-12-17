@@ -48,6 +48,7 @@ function create_directories() {
   chmod 750 "$SECRET"
   chmod 700 "$LOCALCA"
 }
+
 function create_web_page() {
   log_info "Criando ou atualizando a página de bloqueio em $WEB/index.html..."
   tee "$WEB/index.html" >/dev/null <<'HTML'
@@ -56,120 +57,436 @@ function create_web_page() {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Foco nos Estudos</title>
+  <title>Volta. Agora.</title>
+
   <style>
-    :root {
-      --cor-fundo: #0c1524;
-      --cor-card: rgba(255, 255, 255, 0.08);
-      --cor-texto-principal: #e6eef8;
-      --cor-texto-secundario: #a8b9cf;
-      --cor-destaque: #1cb5a9;
-      --cor-botao-fundo: #0ea5a4;
-      --cor-botao-texto: #012a2a;
-      --cor-sombra: rgba(2, 6, 23, 0.7);
+    :root{
+      /* “Gran vibes”: azul + amarelo */
+      --bg0:#070b14;
+      --bg1:#0b1430;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.08);
+
+      --text:#eaf1ff;
+      --muted:#a9b6d3;
+
+      --gran-blue:#1a71ff;
+      --gran-yellow:#fce205;
+
+      --danger:#ff3b3b;
+      --shadow:rgba(0,0,0,.55);
+
+      --btn:#1a71ff;
+      --btnText:#ffffff;
+      --btn2:#fce205;
+      --btn2Text:#121212;
     }
-    body {
-      font-family: 'Inter', system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
-      background: var(--cor-fundo);
-      color: var(--cor-texto-principal);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-      opacity: 0;
-      animation: fadeIn 0.8s ease-out forwards;
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 20%, rgba(26,113,255,.20), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(252,226,5,.14), transparent 55%),
+        radial-gradient(800px 500px at 50% 95%, rgba(255,59,59,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      overflow:hidden;
+      opacity:0;
+      animation:fadeIn .55s ease-out forwards;
     }
-    .card {
-      max-width: 740px;
-      padding: 40px;
-      border-radius: 18px;
-      background: var(--cor-card);
-      box-shadow: 0 12px 35px var(--cor-sombra);
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      transform: scale(0.95);
-      animation: scaleUp 0.8s ease-out forwards 0.2s;
+
+    /* “Pressão” sutil */
+    .vignette{
+      position:fixed; inset:-40px;
+      pointer-events:none;
+      background:
+        radial-gradient(closest-side at 50% 50%, transparent 0%, rgba(0,0,0,.55) 75%, rgba(0,0,0,.82) 100%);
+      mix-blend-mode:multiply;
     }
-    h1 {
-      margin: 0 0 16px;
-      font-size: 38px;
-      color: var(--cor-destaque);
-      letter-spacing: -0.5px;
-      font-weight: 800;
+    .scanline{
+      position:fixed; inset:0;
+      pointer-events:none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.03) 0px,
+        rgba(255,255,255,.03) 1px,
+        transparent 2px,
+        transparent 6px
+      );
+      opacity:.10;
     }
-    p {
-      margin: 0 0 24px;
-      font-size: 19px;
-      color: var(--cor-texto-secundario);
-      line-height: 1.6;
+
+    .wrap{
+      width:100%;
+      max-width:860px;
+      position:relative;
     }
-    a.btn {
-      display: inline-block;
-      padding: 14px 24px;
-      border-radius: 12px;
-      background: var(--cor-botao-fundo);
-      color: var(--cor-botao-texto);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 18px;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 15px rgba(14, 165, 164, 0.4);
+
+    .topbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+      flex-wrap:wrap;
     }
-    a.btn:hover {
-      background: #098e8d;
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 9px 20px rgba(14, 165, 164, 0.6);
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,59,59,.10);
+      border:1px solid rgba(255,59,59,.28);
+      color:#ffd7d7;
+      font-weight:800;
+      letter-spacing:.3px;
+      box-shadow:0 10px 28px rgba(255,59,59,.08);
+      animation:throb 1.6s ease-in-out infinite;
     }
-    .small {
-      margin-top: 24px;
-      font-size: 15px;
-      color: var(--cor-texto-secundario);
-      opacity: 0.7;
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background:var(--danger);
+      box-shadow:0 0 0 0 rgba(255,59,59,.55);
+      animation:ping 1.3s ease-out infinite;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.01); } 100% { transform: scale(1); } }
-    .btn { animation: pulse 2s infinite ease-in-out 1s; }
-    body.exit-animation { animation: fadeOutZoom 0.6s ease-in forwards; }
-    @keyframes fadeOutZoom { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+
+    .method{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(252,226,5,.12);
+      border:1px solid rgba(252,226,5,.28);
+      color:#fff6b6;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .method strong{
+      color:var(--gran-yellow);
+      text-shadow:0 0 18px rgba(252,226,5,.14);
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:0 18px 50px var(--shadow);
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+      transform:translateY(10px) scale(.98);
+      opacity:0;
+      animation:enter .65s ease-out .05s forwards;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(600px 180px at 10% 0%, rgba(26,113,255,.25), transparent 60%),
+        radial-gradient(520px 180px at 90% 0%, rgba(252,226,5,.18), transparent 60%),
+        radial-gradient(520px 200px at 50% 100%, rgba(255,59,59,.10), transparent 65%);
+      pointer-events:none;
+      filter:blur(2px);
+      opacity:.9;
+    }
+
+    .content{ position:relative; z-index:1; }
+
+    h1{
+      margin:0 0 10px;
+      font-size:40px;
+      line-height:1.06;
+      letter-spacing:-.6px;
+      font-weight:950;
+    }
+    h1 .y{ color:var(--gran-yellow); }
+    h1 .b{ color:var(--gran-blue); }
+    h1 .d{ color:#ffb3b3; }
+
+    .subtitle{
+      margin:0 0 18px;
+      font-size:18px;
+      line-height:1.55;
+      color:var(--muted);
+    }
+
+    .warning{
+      margin:16px 0 18px;
+      padding:14px 14px;
+      border-radius:14px;
+      background:rgba(255,59,59,.09);
+      border:1px solid rgba(255,59,59,.22);
+      color:#ffd5d5;
+    }
+    .warning strong{ color:#ffffff; }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:14px;
+      margin:14px 0 18px;
+    }
+    @media (max-width: 860px){
+      h1{ font-size:34px; }
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:14px;
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:15px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      color:#dfe9ff;
+      opacity:.95;
+    }
+
+    .facts{
+      margin:0;
+      padding-left:18px;
+      color:#cfdaf3;
+      line-height:1.55;
+      font-size:15.5px;
+    }
+    .facts li{ margin:8px 0; }
+    .facts em{ color:var(--gran-yellow); font-style:normal; font-weight:900; }
+
+    .timer{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .big{
+      font-size:14px;
+      color:#dbe6ff;
+      opacity:.95;
+    }
+    .count{
+      font-variant-numeric: tabular-nums;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      min-width:120px;
+      text-align:center;
+      box-shadow:0 10px 20px rgba(0,0,0,.18);
+    }
+    .pill .n{
+      display:block;
+      font-size:26px;
+      font-weight:950;
+      color:#ffffff;
+    }
+    .pill .t{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    a.btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 18px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:900;
+      letter-spacing:.2px;
+      transition:transform .18s ease, filter .18s ease, box-shadow .18s ease;
+      border:1px solid rgba(255,255,255,.10);
+      user-select:none;
+    }
+    .btn.primary{
+      background:linear-gradient(180deg, rgba(26,113,255,1), rgba(26,113,255,.85));
+      color:var(--btnText);
+      box-shadow:0 14px 30px rgba(26,113,255,.25);
+    }
+    .btn.secondary{
+      background:linear-gradient(180deg, rgba(252,226,5,1), rgba(252,226,5,.86));
+      color:var(--btn2Text);
+      box-shadow:0 14px 30px rgba(252,226,5,.18);
+    }
+    a.btn:hover{
+      transform:translateY(-2px) scale(1.02);
+      filter:saturate(1.05);
+    }
+
+    .footer{
+      margin-top:14px;
+      text-align:center;
+      font-size:13px;
+      color:rgba(233,242,255,.70);
+      line-height:1.5;
+    }
+    .footer code{
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      color:#eaf1ff;
+      font-weight:800;
+    }
+
+    body.exit-animation{ animation:fadeOutZoom .55s ease-in forwards; }
+
+    @keyframes fadeIn{ to{ opacity:1 } }
+    @keyframes enter{ to{ opacity:1; transform:translateY(0) scale(1) } }
+    @keyframes fadeOutZoom{ from{opacity:1; transform:scale(1)} to{opacity:0; transform:scale(.86)} }
+    @keyframes ping{
+      0%{ box-shadow:0 0 0 0 rgba(255,59,59,.55) }
+      70%{ box-shadow:0 0 0 14px rgba(255,59,59,0) }
+      100%{ box-shadow:0 0 0 0 rgba(255,59,59,0) }
+    }
+    @keyframes throb{
+      0%,100%{ transform:translateZ(0) scale(1) }
+      50%{ transform:translateZ(0) scale(1.02) }
+    }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <h1><span style="color: #fce205;">Pare.</span> <span style="color: var(--cor-destaque);">Foque.</span> <span style="color: #1a71ff;">Estude.</span></h1>
-    <p>Você acessou um site que pode desviar seu foco. Este é um lembrete para <br> retornar ao seu objetivo principal e **conquistar seus estudos**.</p>
-    <a class="btn" href="https://questoes.grancursosonline.com.br/" target="_blank" rel="noopener">
-      &#x1F4DA; Abrir Ferramentas de Estudo &#x27A1;
-    </a>
-    <div class="small">
-      Lembre-se da Técnica Pomodoro: 25 min foco intenso + 5 min pausa. <br>
-      Sua jornada de aprendizado te espera!
+  <div class="vignette"></div>
+  <div class="scanline"></div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="badge"><span class="dot"></span> ALERTA DE DESVIO</div>
+      <div class="method">Método <strong>01</strong> vai dar certo.</div>
+    </div>
+
+    <div class="card">
+      <div class="content">
+        <h1><span class="y">Pare.</span> <span class="b">Agora.</span> <span class="d">Volte pro estudo.</span></h1>
+
+        <p class="subtitle">
+          Esse clique “inofensivo” é como você <strong>perdendo sua vaga por minutos</strong>.
+          O edital não perdoa. O tempo não volta. E ninguém vai estudar por você.
+        </p>
+
+        <div class="warning">
+          <strong>Realidade:</strong> distração não é descanso — é dívida.
+          Você paga depois com ansiedade, pressa, culpa e prova mal feita.
+        </div>
+
+        <div class="grid">
+          <div class="panel">
+            <h2>Se você continuar aqui…</h2>
+            <ul class="facts">
+              <li>Você treina o cérebro a buscar alívio rápido — e <em>piora a disciplina</em>.</li>
+              <li>Você troca futuro por dopamina barata — e depois chama isso de “cansaço”.</li>
+              <li>Você adia hoje e empilha amanhã — <em>e amanhã chega com juros</em>.</li>
+              <li>Você diz “só 5 minutos” — e entrega <em>30, 60, 90…</em></li>
+            </ul>
+          </div>
+
+          <div class="panel timer">
+            <h2>Seu foco começa em</h2>
+            <div class="big">
+              25 minutos de execução > 2 horas de “planejamento”.<br>
+              Comece um bloco. Agora.
+            </div>
+
+            <div class="count" aria-label="contador">
+              <div class="pill"><span class="n" id="m">25</span><span class="t">minutos</span></div>
+              <div class="pill"><span class="n" id="s">00</span><span class="t">segundos</span></div>
+            </div>
+
+            <div class="big">
+              Regra: abre o Gran e resolve <strong>10 questões</strong> antes de qualquer outra coisa.
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn primary" id="goGran" href="https://www.grancursosonline.com.br/" target="_blank" rel="noopener">
+            📘 Abrir Gran (AGORA)
+          </a>
+
+          <a class="btn secondary" id="goQuestoes" href="https://questoes.grancursosonline.com.br/" target="_blank" rel="noopener">
+            ✅ Ir direto pras Questões
+          </a>
+        </div>
+
+        <div class="footer">
+          Lembrete duro, mas verdadeiro: estabilidade não cai do céu.
+          <br>
+          <code>Bloco 25/5</code> — 25 min foco total + 5 min pausa. Repete.
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    document.querySelector('.btn').addEventListener('click', function(event) {
-        event.preventDefault(); // Impede a navegação padrão do link
-        
-        // Lista de URLs que você quer abrir
-        const urlsParaAbrir = [
-            'https://questoes.grancursosonline.com.br/',
-            'https://blog.grancursosonline.com.br/',
-            'https://www.qconcursos.com/'
-        ];
+    // Pomodoro visual (25:00 -> 00:00)
+    let total = 25 * 60; // segundos
+    const elM = document.getElementById('m');
+    const elS = document.getElementById('s');
 
-        // Adiciona a classe para a animação de saída
-        document.body.classList.add('exit-animation');
+    function tick(){
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      elM.textContent = String(m).padStart(2,'0');
+      elS.textContent = String(s).padStart(2,'0');
 
-        // Aguarda a animação terminar antes de abrir as abas
-        setTimeout(function() {
-            // Abre cada URL da lista em uma nova aba
-            urlsParaAbrir.forEach(url => {
-                window.open(url, '_blank');
-            });
-        }, 500); 
+      if(total > 0){
+        total--;
+      }else{
+        // quando zera: aumenta pressão visual no alerta
+        const badge = document.querySelector('.badge');
+        badge.style.borderColor = 'rgba(252,226,5,.45)';
+        badge.style.background = 'rgba(252,226,5,.12)';
+        badge.style.color = '#fff6b6';
+        document.querySelector('.badge .dot').style.background = 'var(--gran-yellow)';
+      }
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    function openWithExit(url){
+      document.body.classList.add('exit-animation');
+      setTimeout(() => window.open(url, '_blank'), 350);
+    }
+
+    document.getElementById('goGran').addEventListener('click', (e) => {
+      e.preventDefault();
+      openWithExit('https://www.grancursosonline.com.br/');
+    });
+
+    document.getElementById('goQuestoes').addEventListener('click', (e) => {
+      e.preventDefault();
+      openWithExit('https://questoes.grancursosonline.com.br/');
     });
   </script>
 </body>
@@ -296,13 +613,13 @@ public class HttpsFocusServer {
 
             if (!Files.exists(p12Path)) throw new FileNotFoundException("Arquivo P12 não encontrado: " + p12Path);
             if (!Files.isDirectory(webRoot)) throw new FileNotFoundException("Diretório web_root não encontrado: " + webRoot);
-            
+
             KeyStore ks = KeyStore.getInstance("PKCS12");
             try (InputStream is = Files.newInputStream(p12Path)) { ks.load(is, password); }
-            
+
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(ks, password);
-            
+
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
 
@@ -437,17 +754,23 @@ BASH
 
 function create_systemd_units() {
   log_info "Criando e configurando os serviços do systemd..."
-  
+
   tee "/etc/systemd/system/https-focus.service" >/dev/null <<SERVICE
 [Unit]
 Description=HTTPS Focus Server (Java)
 After=network-online.target
+Wants=network-online.target
+
 [Service]
 Type=simple
-ExecStart=/usr/bin/java -cp $SRC HttpsFocusServer 443 $CERTS/server.p12 "\$(cat $SECRET/p12.pass)" $WEB
-Restart=on-failure; RestartSec=5; User=root
+User=root
+WorkingDirectory=$BASE
+ExecStart=/bin/bash -lc '/usr/bin/java -cp $SRC HttpsFocusServer 443 $CERTS/server.p12 "\$(cat $SECRET/p12.pass)" $WEB'
+Restart=on-failure
+RestartSec=5
 StandardOutput=append:/var/log/https-focus.log
 StandardError=append:/var/log/https-focus.log
+
 [Install]
 WantedBy=multi-user.target
 SERVICE
@@ -455,15 +778,20 @@ SERVICE
   tee "/etc/systemd/system/hosts-redirector-reload.service" >/dev/null <<RELOADSVC
 [Unit]
 Description=Rebuild certificate/hosts from block list
+
 [Service]
-Type=oneshot; ExecStart=$GEN_SCRIPT
+Type=oneshot
+ExecStart=$GEN_SCRIPT
 RELOADSVC
 
   tee "/etc/systemd/system/hosts-redirector-reload.path" >/dev/null <<RELOADPATH
 [Unit]
 Description=Watch block list for changes
+
 [Path]
-PathChanged=$LIST; Unit=hosts-redirector-reload.service
+PathChanged=$LIST
+Unit=hosts-redirector-reload.service
+
 [Install]
 WantedBy=multi-user.target
 RELOADPATH
@@ -475,7 +803,7 @@ function run_first_build_and_enable() {
 
   log_info "Executando a primeira geração de hosts e certificados..."
   "$GEN_SCRIPT"
-  
+
   log_info "Habilitando e iniciando os serviços..."
   systemctl daemon-reload
   systemctl enable --now https-focus.service
@@ -484,7 +812,7 @@ function run_first_build_and_enable() {
 
 main() {
   check_root
-  
+
   install_dependencies
   create_directories
   create_web_page
@@ -492,9 +820,9 @@ main() {
   create_java_server
   create_rebuild_script
   create_systemd_units
-  
+
   run_first_build_and_enable
-  
+
   echo
   log_success "=== INSTALAÇÃO CONCLUÍDA ==="
   echo "O sistema de foco está ativo e iniciará com o sistema."
