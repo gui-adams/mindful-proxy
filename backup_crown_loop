@@ -1,0 +1,52 @@
+Passo 1: Criar o "Arquivo Mestre" (O Gabarito)
+Primeiro, vamos salvar uma cópia desse seu arquivo hosts perfeito (que já está blindado) em um lugar seguro e escondido.
+
+Abra o terminal.
+
+Copie o arquivo atual para uma pasta do sistema com um nome discreto (para você não achar fácil depois):
+
+Bash
+sudo cp /etc/hosts /usr/local/share/hosts.backup
+
+Passo 2: Criar o Script Policial
+Vamos criar um script simples que força a restauração desse backup.
+
+Crie o script:
+
+Bash
+sudo nano /usr/local/bin/policia_foco.sh
+
+Cole o seguinte conteúdo dentro dele:
+
+Bash
+#!/bin/bash
+# Se o arquivo hosts for alterado, restaure o backup imediatamente
+cp /usr/local/share/hosts.backup /etc/hosts
+# Garante que as permissões estejam corretas
+chmod 644 /etc/hosts
+# Opcional: Reaplica o cadeado imutável se você tiver tirado
+chattr +i /etc/hosts
+Salve (Ctrl+O, Enter) e Saia (Ctrl+X).
+
+Torne o script executável:
+
+Bash
+sudo chmod +x /usr/local/bin/policia_foco.sh
+Digite 1 e pressione Enter.
+
+Passo 3: Ativar o Cron Job (O Loop Infinito)
+Agora vamos dizer ao Linux para rodar esse script a cada minuto, para sempre.
+
+Edite a tabela de tarefas do sistema (crontab do root):
+
+Bash
+sudo crontab -e
+(Se perguntar qual editor usar, escolha o 1 - nano).
+
+Vá até a última linha do arquivo e adicione exatamente isso:
+
+Plaintext
+* * * * * /usr/local/bin/policia_foco.sh >/dev/null 2>&1
+(Isso significa: "A cada minuto, de cada hora, de cada dia, execute o policia_foco.sh").
+
+Salve e saia.
