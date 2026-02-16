@@ -1,0 +1,185 @@
+127.0.0.1 localhost
+127.0.1.1 sw-gad-MS-Challenger-H510M-R-V2
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+# ==========================================
+# 🛑 BLOQUEIO DE BUSCA (MODO CAVERNA)
+# ==========================================
+127.0.0.1 google.com
+::1       google.com
+127.0.0.1 www.google.com
+::1       www.google.com
+127.0.0.1 google.com.br
+::1       google.com.br
+127.0.0.1 www.google.com.br
+::1       www.google.com.br
+127.0.0.1 bing.com
+::1       bing.com
+127.0.0.1 www.bing.com
+::1       www.bing.com
+127.0.0.1 yahoo.com
+::1       yahoo.com
+127.0.0.1 duckduckgo.com
+::1       duckduckgo.com
+
+# ==========================================
+# 🛑 REDES SOCIAIS (AGORA COM IPV6)
+# ==========================================
+127.0.0.1 instagram.com
+::1       instagram.com
+127.0.0.1 www.instagram.com
+::1       www.instagram.com
+127.0.0.1 facebook.com
+::1       facebook.com
+127.0.0.1 www.facebook.com
+::1       www.facebook.com
+127.0.0.1 twitter.com
+::1       twitter.com
+127.0.0.1 www.twitter.com
+::1       www.twitter.com
+127.0.0.1 x.com
+::1       x.com
+127.0.0.1 www.x.com
+::1       www.x.com
+127.0.0.1 tiktok.com
+::1       tiktok.com
+127.0.0.1 www.tiktok.com
+::1       www.tiktok.com
+127.0.0.1 linkedin.com
+::1       linkedin.com
+127.0.0.1 www.linkedin.com
+::1       www.linkedin.com
+127.0.0.1 reddit.com
+::1       reddit.com
+127.0.0.1 pinterest.com
+::1       pinterest.com
+127.0.0.1 br.pinterest.com
+::1       br.pinterest.com
+
+# ==========================================
+# 🛑 VÍDEO E STREAMING
+# ==========================================
+127.0.0.1 youtube.com
+::1       youtube.com
+127.0.0.1 www.youtube.com
+::1       www.youtube.com
+127.0.0.1 m.youtube.com
+::1       m.youtube.com
+127.0.0.1 youtu.be
+::1       youtu.be
+127.0.0.1 twitch.tv
+::1       twitch.tv
+127.0.0.1 netflix.com
+::1       netflix.com
+127.0.0.1 globoplay.globo.com
+::1       globoplay.globo.com
+127.0.0.1 primevideo.com
+::1       primevideo.com
+
+# ==========================================
+# 🛑 BOTAFOGO (BLOQUEIO TOTAL)
+# ==========================================
+127.0.0.1 fogaonet.com
+::1       fogaonet.com
+127.0.0.1 www.fogaonet.com
+::1       www.fogaonet.com
+127.0.0.1 fogaonet.com.br
+::1       fogaonet.com.br
+127.0.0.1 www.fogaonet.com.br
+::1       www.fogaonet.com.br
+127.0.0.1 fogonarede.com.br
+::1       fogonarede.com.br
+127.0.0.1 botafogo.com.br
+::1       botafogo.com.br
+127.0.0.1 www.botafogo.com.br
+::1       www.botafogo.com.br
+127.0.0.1 meubotafogo.com.br
+::1       meubotafogo.com.br
+127.0.0.1 canalbotafogo.com
+::1       canalbotafogo.com
+127.0.0.1 resenhafogao.com.br
+::1       resenhafogao.com.br
+127.0.0.1 loja.botafogo.com.br
+::1       loja.botafogo.com.br
+
+# ==========================================
+# 🛑 ESPORTES GERAIS
+# ==========================================
+127.0.0.1 ge.globo.com
+::1       ge.globo.com
+127.0.0.1 globoesporte.globo.com
+::1       globoesporte.globo.com
+127.0.0.1 espn.com.br
+::1       espn.com.br
+127.0.0.1 www.espn.com.br
+::1       www.espn.com.br
+127.0.0.1 lance.com.br
+::1       lance.com.br
+127.0.0.1 tntsports.com.br
+::1       tntsports.com.br
+127.0.0.1 gazetaesportiva.com
+::1       gazetaesportiva.com
+127.0.0.1 uol.com.br/esporte
+::1       uol.com.br/esporte
+127.0.0.1 placar.com.br
+::1       placar.com.br
+
+# ==========================================
+# 🛑 NOTÍCIAS E FOFOCAS (BRASÍLIA E GERAL)
+# ==========================================
+127.0.0.1 g1.globo.com
+::1       g1.globo.com
+127.0.0.1 uol.com.br
+::1       uol.com.br
+127.0.0.1 www.uol.com.br
+::1       www.uol.com.br
+127.0.0.1 noticias.uol.com.br
+::1       noticias.uol.com.br
+127.0.0.1 metropoles.com
+::1       metropoles.com
+127.0.0.1 www.metropoles.com
+::1       www.metropoles.com
+127.0.0.1 correiobraziliense.com.br
+::1       correiobraziliense.com.br
+127.0.0.1 www.correiobraziliense.com.br
+::1       www.correiobraziliense.com.br
+127.0.0.1 jornaldebrasilia.com.br
+::1       jornaldebrasilia.com.br
+127.0.0.1 cnnbrasil.com.br
+::1       cnnbrasil.com.br
+127.0.0.1 r7.com
+::1       r7.com
+127.0.0.1 terra.com.br
+::1       terra.com.br
+127.0.0.1 estadao.com.br
+::1       estadao.com.br
+127.0.0.1 folha.uol.com.br
+::1       folha.uol.com.br
+127.0.0.1 poder360.com.br
+::1       poder360.com.br
+127.0.0.1 oantagonista.com
+::1       oantagonista.com
+127.0.0.1 leodias.com
+::1       leodias.com
+127.0.0.1 ofuxico.com.br
+::1       ofuxico.com.br
+
+# ==========================================
+# 🛑 COMPRAS
+# ==========================================
+127.0.0.1 amazon.com.br
+::1       amazon.com.br
+127.0.0.1 mercadolivre.com.br
+::1       mercadolivre.com.br
+127.0.0.1 shopee.com.br
+::1       shopee.com.br
+127.0.0.1 aliexpress.com
+::1       aliexpress.com
+127.0.0.1 magazineluiza.com.br
+::1       magazineluiza.com.br
