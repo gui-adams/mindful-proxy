@@ -1,0 +1,2 @@
+sudo chattr +i /etc/hosts = deixar imutavel
+sudo chattr -i /etc/hosts destravar
